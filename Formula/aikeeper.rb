@@ -1,8 +1,8 @@
 class Aikeeper < Formula
   desc "Local-only Codex token usage daemon and dashboard"
   homepage "https://github.com/alevkin/ai-keeper"
-  url "https://github.com/alevkin/ai-keeper/releases/download/v0.25.2/aikeeper-v0.25.2.tar.gz"
-  sha256 "9af3a6348e50ad56d1eaf72ca541d060801935c7c84be9db1a07248277a5d913"
+  url "https://github.com/alevkin/ai-keeper/releases/download/v0.25.3/aikeeper-v0.25.3.tar.gz"
+  sha256 "bd7df63ab53aa2c2838b23f87f3913d22eeee47e9fa8aa5561470f31ba54ed60"
 
   depends_on "uv"
 
@@ -50,6 +50,12 @@ class Aikeeper < Formula
     chmod 0755, bin/"aikeeper-public-release-gate"
   end
 
+  def post_install
+    return if ENV["AIKEEPER_SKIP_AUTO_INSTALL"] == "1"
+
+    system bin/"aikeeper-install", "--port", ENV.fetch("AIKEEPER_PORT", "8766")
+  end
+
   test do
     system bin/"aikeeper-install", "--help"
   end
@@ -57,8 +63,11 @@ class Aikeeper < Formula
   def caveats
     <<~EOS
       AI Keeper is local-only and metadata-only.
-      Run: aikeeper-install --port 8766
+      Local setup runs automatically after install.
       Dashboard: http://127.0.0.1:8766
+      Repair setup: aikeeper-install --port 8766
+      Custom port: AIKEEPER_PORT=8770 brew install alevkin/tap/aikeeper
+      Skip setup: AIKEEPER_SKIP_AUTO_INSTALL=1 brew install alevkin/tap/aikeeper
     EOS
   end
 end
