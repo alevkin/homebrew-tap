@@ -1,8 +1,8 @@
 class Aikeeper < Formula
   desc "Local-only AI token usage daemon and dashboard"
   homepage "https://github.com/alevkin/ai-keeper"
-  url "https://github.com/alevkin/ai-keeper/releases/download/v0.26.2/aikeeper-v0.26.2.tar.gz"
-  sha256 "7a8b20bf5d1e752517685277e054d12a545631ed2bddcacd98957a76c3f94457"
+  url "https://github.com/alevkin/ai-keeper/releases/download/v0.26.3/aikeeper-v0.26.3.tar.gz"
+  sha256 "dc8fe5249287a02b194406e13373ad5385c61e1bb0e166c944eb4d59881c21db"
 
   depends_on "uv"
 
