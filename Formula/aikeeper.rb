@@ -1,8 +1,8 @@
 class Aikeeper < Formula
   desc "Local-only AI token usage daemon and dashboard"
   homepage "https://github.com/alevkin/ai-keeper"
-  url "https://github.com/alevkin/ai-keeper/releases/download/v0.30.7/aikeeper-v0.30.7.tar.gz"
-  sha256 "fe0cfb268cf3bd36de775d5ec90c0cc1c0a8b055ca7e779f08f2fdef2acde2ce"
+  url "https://github.com/alevkin/ai-keeper/releases/download/v0.30.8/aikeeper-v0.30.8.tar.gz"
+  sha256 "b50a150b23b5c55b7adcf4264f4ae3bd84db304ab603f128b21aa01439bc6d34"
 
   on_macos do
     on_arm do
@@ -45,6 +45,14 @@ class Aikeeper < Formula
 
       (libexec/"vendor"/"uv").install uv_files
     end
+    (bin/"aikeeper").write <<~EOS
+      #!/usr/bin/env bash
+      export PATH="#{libexec}/vendor/uv:$PATH"
+      if [[ ! -x "#{libexec}/.venv/bin/aikeeper" ]]; then
+        "#{libexec}/vendor/uv/uv" --directory "#{libexec}" sync --frozen --no-dev >/dev/null
+      fi
+      exec "#{libexec}/.venv/bin/aikeeper" "$@"
+    EOS
     (bin/"aikeeper-install").write <<~EOS
       #!/usr/bin/env bash
       export PATH="#{libexec}/vendor/uv:$PATH"
@@ -85,6 +93,7 @@ class Aikeeper < Formula
       export PATH="#{libexec}/vendor/uv:$PATH"
       exec "#{libexec}/scripts/public-release-gate.sh" "$@"
     EOS
+    chmod 0755, bin/"aikeeper"
     chmod 0755, bin/"aikeeper-install"
     chmod 0755, bin/"aikeeper-install-git-hooks"
     chmod 0755, bin/"aikeeper-upgrade"
@@ -106,6 +115,7 @@ class Aikeeper < Formula
         aikeeper-install --port 8766
 
       Dashboard: http://127.0.0.1:8766
+      Doctor: aikeeper doctor --port 8766
       Repair setup: aikeeper-install --port 8766
       Custom port: aikeeper-install --port 8770
     EOS
