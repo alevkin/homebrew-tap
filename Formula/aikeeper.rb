@@ -1,13 +1,14 @@
 class Aikeeper < Formula
   desc "Local-only AI token usage daemon and dashboard"
   homepage "https://github.com/alevkin/ai-keeper"
-  url "https://github.com/alevkin/ai-keeper/releases/download/v0.30.0/aikeeper-v0.30.0.tar.gz"
-  sha256 "3a58d329fffd26703fa55110b222c2f21bf09aada88203e0f7e90361a43c9962"
+  url "https://github.com/alevkin/ai-keeper/releases/download/v0.30.1/aikeeper-v0.30.1.tar.gz"
+  sha256 "51053fe72bbda44790a77587b4d9e27f28f4bf292072dd6f955ba264eca1d95b"
 
   depends_on "uv"
 
   def install
     libexec.install Dir["*"]
+    inreplace libexec/"pyproject.toml", 'readme = "README.md"', 'readme = "../README.md"'
     (bin/"aikeeper-install").write <<~EOS
       #!/usr/bin/env bash
       exec "#{libexec}/scripts/install.sh" "$@"
