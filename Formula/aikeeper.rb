@@ -1,8 +1,8 @@
 class Aikeeper < Formula
   desc "Local-only AI token usage daemon and dashboard"
   homepage "https://github.com/alevkin/ai-keeper"
-  url "https://github.com/alevkin/ai-keeper/releases/download/v0.30.4/aikeeper-v0.30.4.tar.gz"
-  sha256 "4fcf8f5e9d6763533ef6930217206d1b00fbd1903956f2ab16a0dc2a02fdb865"
+  url "https://github.com/alevkin/ai-keeper/releases/download/v0.30.5/aikeeper-v0.30.5.tar.gz"
+  sha256 "591b41c13fbf127b878d44e1213307db2ad8273d09ca478d35baf0e4ba74eab7"
 
   on_macos do
     on_arm do
@@ -40,7 +40,10 @@ class Aikeeper < Formula
     libexec.install Dir["*"]
     inreplace libexec/"pyproject.toml", 'readme = "README.md"', 'readme = "../README.md"'
     resource("uv").stage do
-      (libexec/"vendor"/"uv").install Dir["uv-*/*"]
+      uv_files = Dir["uv", "uvx", "uv-*/*"]
+      raise "uv resource did not contain uv or uvx" if uv_files.empty?
+
+      (libexec/"vendor"/"uv").install uv_files
     end
     (bin/"aikeeper-install").write <<~EOS
       #!/usr/bin/env bash
